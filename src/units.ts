@@ -2,6 +2,8 @@
 export type Radians = Opaque<"Radians", number>
 export type Degrees = Opaque<"Degrees", number>
 
+const PI = Number(Math.PI.toPrecision(3))
+
 // Constructor for Radians type
 export function Radians(angle: number): Radians {
     return angle as unknown as Radians;
@@ -12,7 +14,7 @@ export function Degrees(angle: number): Degrees {
 }
 
 export function toRadians(angle: Degrees): Radians {
-  return ((Math.PI * 2) / 360) * (angle as unknown as number) as unknown as Radians
+  return Number((((PI * 2) / 360) * (angle as unknown as number)).toFixed(2)) as unknown as Radians
 }
 
 export function toDegrees(angle: Radians): Degrees {

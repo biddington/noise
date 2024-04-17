@@ -25,7 +25,7 @@ type Dimensions = { width: number; height: number };
 // Local transforms are done before world transforms otherwise
 // this could have unintended effect of rotating about the wrong center
 let local = ({ zRot }:Rotation) =>
-  transform(rotateX(zRot))
+  transform(rotateY(zRot))
 
 // World transform (all mesh in the scene)
 // TODO: let transformed = mesh.vertices.map((vertex) => rotateX(Radians(Math.PI / 2), vertex))
@@ -35,8 +35,8 @@ let local = ({ zRot }:Rotation) =>
 // Note the `-v.z` we divide by and set `z` to. We  do this otherwise it swaps our projected points - what would
 // be clipped is now actually visible, and vice-versa.
 let perspective = transform(v => ({
-  x: v.x / -v.z * 160, // fudge factor
-  y: v.y / -v.z * 160,
+  x: v.x / -v.z * 200, // fudge factor
+  y: v.y / -v.z * 200,
   z: -v.z,
   w: v.w,
 }));
