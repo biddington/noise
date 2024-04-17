@@ -1,0 +1,18 @@
+:root {
+    height: 100%;
+}
+
+body {
+    height: inherit;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+canvas {
+    width: 500px;
+    height: 500px;
+    border: 1px solid hsl(0, 10%, 95%);
+}
