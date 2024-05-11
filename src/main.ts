@@ -52,14 +52,18 @@ function setup(): Renderer {
 
   ctx.strokeStyle = "#222";
 
-  return config(ctx, mesh);
+  return config(ctx);
 }
 
 function run(render: Renderer) {
   // where does the mesh come from?
 
   function renderLoop(ms:any) {
-    render({ xRot: Radians(0), yRot: Radians(0), zRot: Radians((ms/350)* 0.2) })
+    render(mesh, {
+      xRot: Radians(0),
+      yRot: Radians(0),
+      zRot: Radians((ms/350)* 0.2)
+    })
     requestAnimationFrame(renderLoop);
   }
 
