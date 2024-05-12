@@ -1,20 +1,20 @@
 import "./style.css";
 import type { Mesh } from "./mesh";
 import { Idx } from "./mesh";
-import type { Renderer } from "./renderer"
+import type { Renderer } from "./renderer";
 import { config } from "./renderer";
 import { Radians } from "./units";
 
 const mesh: Mesh = {
   vertices: [
-    { x: -100, y: -100, z:  100, w: 1 },
-    { x: -100, y:  100, z:  100, w: 1 },
-    { x:  100, y:  100, z:  100, w: 1 },
-    { x:  100, y: -100, z:  100, w: 1 },
+    { x: -100, y: -100, z: 100, w: 1 },
+    { x: -100, y: 100, z: 100, w: 1 },
+    { x: 100, y: 100, z: 100, w: 1 },
+    { x: 100, y: -100, z: 100, w: 1 },
     { x: -100, y: -100, z: -100, w: 1 },
-    { x: -100, y:  100, z: -100, w: 1 },
-    { x:  100, y:  100, z: -100, w: 1 },
-    { x:  100, y: -100, z: -100, w: 1 },
+    { x: -100, y: 100, z: -100, w: 1 },
+    { x: 100, y: 100, z: -100, w: 1 },
+    { x: 100, y: -100, z: -100, w: 1 },
   ],
 
   faces: [[Idx(0), Idx(1), Idx(2)]],
@@ -35,7 +35,7 @@ const mesh: Mesh = {
     [Idx(1), Idx(5)],
     [Idx(2), Idx(6)],
     [Idx(3), Idx(7)],
-  ]
+  ],
 };
 
 function setup(): Renderer {
@@ -56,18 +56,11 @@ function setup(): Renderer {
 }
 
 function run(render: Renderer) {
-  // where does the mesh come from?
-
-  function renderLoop(ms:any) {
-    render(mesh, {
-      xRot: Radians(0),
-      yRot: Radians(0),
-      zRot: Radians((ms/350)* 0.2)
-    })
-    requestAnimationFrame(renderLoop);
-  }
-
-  requestAnimationFrame(renderLoop);
+  render.edges(mesh, (ms: number) => ({
+    xRot: Radians(0),
+    yRot: Radians(0),
+    zRot: Radians((ms / 350) * 0.2),
+  }));
 }
 
 run(setup());

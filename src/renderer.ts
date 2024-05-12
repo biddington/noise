@@ -76,7 +76,10 @@ export type MeshRotation = {
   zRot: Radians
 };
 
-export type Renderer = (mesh:Mesh, rotation: MeshRotation) => void;
+export type Renderer = {
+  edges: (mesh:Mesh, fn:(ms:number) => MeshRotation) => void,
+  points: (mesh:Mesh, fn:(ms:number) => MeshRotation) => void
+}
 
 const config = (ctx: CanvasRenderingContext2D): Renderer => {
 
@@ -89,26 +92,40 @@ const config = (ctx: CanvasRenderingContext2D): Renderer => {
         normalise({ width: canvas.width, height: canvas.height }),
         iso))
 
-  return (mesh: Mesh, rotation: MeshRotation) => {
+  return  {
+    edges: (mesh: Mesh, rotation: (ms: number) => MeshRotation) => {
 
-    let modelRotation = local(rotation)
+      const inner = (ms:number) => {
+        requestAnimationFrame(inner)
 
-    let rotatedVertices = mesh.vertices.map(modelRotation)
+        let modelRotation = local(rotation(ms))
 
-    let rasterised = rotatedVertices.map(pipeline)
+        let rotatedVertices = mesh.vertices.map(modelRotation)
 
-    ctx.clearRect(0, 0, 1000, 1000)
-    ctx.beginPath();
+        let rasterised = rotatedVertices.map(pipeline)
 
-    for (const [a, b] of mesh.edges) {
-      ctx.moveTo(rasterised[a].x, rasterised[a].y);
-      ctx.lineTo(rasterised[b].x, rasterised[b].y);
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        ctx.beginPath();
+
+        for (const [a, b] of mesh.edges) {
+          ctx.moveTo(rasterised[a].x, rasterised[a].y);
+          ctx.lineTo(rasterised[b].x, rasterised[b].y);
+        }
+
+        ctx.closePath()
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      }
+
+      requestAnimationFrame(inner)
+    },
+
+    points: (mesh: Mesh, fn: (ms:number) => MeshRotation) => {
+      //
     }
+  }
 
-    ctx.closePath()
-    ctx.lineWidth = 3;
-    ctx.stroke();
-  };
+
 };
 
 export { config };
