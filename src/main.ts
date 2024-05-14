@@ -3,9 +3,9 @@ import type { Mesh } from "./mesh";
 import { Idx } from "./mesh";
 import type { Renderer } from "./renderer";
 import { config } from "./renderer";
-import { Radians } from "./units";
+// import { plane } from "./mesh/plane";
 
-const mesh: Mesh = {
+const cube: Mesh = {
   vertices: [
     { x: -100, y: -100, z: 100, w: 1 },
     { x: -100, y: 100, z: 100, w: 1 },
@@ -56,11 +56,7 @@ function setup(): Renderer {
 }
 
 function run(render: Renderer) {
-  render.edges(mesh, (ms: number) => ({
-    xRot: Radians(0),
-    yRot: Radians(0),
-    zRot: Radians((ms / 350) * 0.2),
-  }));
+  render.edges(cube)
 }
 
 run(setup());
