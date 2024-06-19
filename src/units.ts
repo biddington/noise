@@ -1,7 +1,3 @@
-
-export type Radians = Opaque<"Radians", number>
-export type Degrees = Opaque<"Degrees", number>
-
 const PI = Number(Math.PI.toPrecision(3))
 
 // Constructor for Radians type
@@ -17,6 +13,6 @@ export function toRadians(angle: Degrees): Radians {
   return Number((((PI * 2) / 360) * (angle as unknown as number)).toFixed(2)) as unknown as Radians
 }
 
-export function toDegrees(angle: Radians): Degrees {
-  throw Error("Not implemented yet")
-}
+// export function toDegrees(angle: Radians): Degrees {
+//   throw Error("Not implemented yet")
+// }

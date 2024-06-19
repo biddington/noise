@@ -1,6 +1,3 @@
-import type { Mesh } from "../mesh";
-import { Idx } from "../mesh";
-
 let plane: Mesh = {
   vertices: [],
   faces: [],

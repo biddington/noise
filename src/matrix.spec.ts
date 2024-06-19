@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 import * as fc from "fast-check";
 import { add } from "./vector";
 
-describe("vector addition", () => {
+describe("matrix", () => {
   test("should be commutative", () => {
     fc.assert(
       fc.property(

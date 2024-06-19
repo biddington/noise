@@ -1,6 +1,4 @@
 import { cos, sin } from "./trig";
-import { Radians } from "./units";
-import type { Vec4 } from "./vector";
 
 export type Mat4 = [ Vec4, Vec4, Vec4, Vec4 ];
 

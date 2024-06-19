@@ -1,26 +1,19 @@
-import * as M from "./matrix";
-import { Mat4, determinant, inverse, m, mul, rotateX, rotateY, rotateZ, scale, translate } from "./matrix";
-import type { Mesh } from "./mesh";
+import { inverse, m, mul, rotateX, rotateY, identity, translate } from "./matrix";
 import { Radians } from "./units";
-import { type Vec4 } from "./vector";
-
-
-const comp = <F extends (v: Vec4) => Vec4>(
-  f: F,
-  g: F,
-): ((args: Parameters<F>[0]) => Vec4) => {
-  return (args: Parameters<F>[0]) => f(g(args));
-};
 
 type Dimensions = { width: number; height: number };
+
+function comp<F extends (...args:any[]) => any,G extends (...args:any[]) => any>(f: F, g: G): (args: Parameters<F>[0]) => Vec4 {
+  return (args: Parameters<F>[0]) => f(g(args));
+}
 
 //////////////////////////////////////////////////////////////////////
 ////////////// Pipline functions
 //////////////////////////////////////////////////////////////////////
 
-let camera = (identity:Mat4, inputs:Ext) => {
-  // How to?
-}
+// let camera = (identity:Mat4, inputs:Ext) => {
+//   // How to?
+// }
 
 // World transform (all mesh in the scene)
 // TODO: let transformed = mesh.vertices.map((vertex) => rotateX(Radians(Math.PI / 2), vertex))
@@ -57,8 +50,6 @@ let ortho = (v: Vec4) => ({
 //   M.rotateZ(toRadians(Degrees(45))),
 // );
 
-let iso = M.iso
-
 // Normalising the coords allows us side-step the creation of
 // dimension-specific clip functions
 // +/- Inf x,y => 0 -> 1
@@ -87,15 +78,15 @@ let rasterise = (canvas: Dimensions) => {
 };
 
 type Ext = {
-  rotation: {
-    x: Radians,
-    y: Radians,
-    z: Radians,
+  rotation?: {
+    x?: Radians,
+    y?: Radians,
+    z?: Radians,
   }
-  translation: {
-    x: number,
-    y: number,
-    z: number,
+  translation?: {
+    x?: number,
+    y?: number,
+    z?: number,
   }
 }
 
@@ -133,17 +124,17 @@ const config = (ctx: CanvasRenderingContext2D): Renderer => {
   return {
     edges: (mesh: Mesh, inputs = defaults) => {
 
-      const frame = (ms: number) => {
-        requestAnimationFrame(frame);
+      const frame = () => {
+        // requestAnimationFrame(frame);
 
         // calculate the world matrix from inverse of the camera
-        let rm = m(rotateY(Radians(.5)), rotateX(Radians(.2)))
-        let tm = translate({ tx: 0, ty: 0, tz: 500 })
-        let world = m(rm, tm)
+        let rm = m(
+          rotateY(inputs?.rotation?.x ?? Radians(0)),
+          rotateX(inputs?.rotation?.y ?? Radians(0)),
+        )
+        let tm = translate({ tx: 0, ty: 0, tz: 0 })
+        let world = m(rm, tm) // rm then tm
         let camera = inverse(world)
-
-        // no-op
-        // let modelRotation = (v:Vec4) => v;
 
         let _v = mesh.vertices.map(v => mul(camera, v));
 
@@ -162,12 +153,14 @@ const config = (ctx: CanvasRenderingContext2D): Renderer => {
         ctx.stroke();
       };
 
-      requestAnimationFrame(frame);
+      frame()
+
+      // requestAnimationFrame(frame);
     },
 
     points: (mesh: Mesh, inputs = defaults) => {
 
-      const frame = (ms: number) => {
+      const frame = () => {
         requestAnimationFrame(frame);
 
         // let modelRotation = local(fn(ms));
