@@ -6,7 +6,6 @@ function Idx(n: number): Idx {
   return n as Idx;
 };
 
-
 const cube: Mesh = {
   vertices: [
     { x: -100, y: -100, z: 100, w: 1 },

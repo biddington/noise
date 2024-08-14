@@ -1,8 +1,10 @@
 import "./style.css";
-import type { Renderer } from "./renderer";
-import { config } from "./renderer";
+import type { Renderer } from "./renderer/renderer";
+import { config } from "./renderer/renderer";
 import { Radians } from "./units";
 import { cube } from "./mesh/cube";
+import { plane } from "./mesh/plane";
+
 
 function setup(): Renderer {
 
@@ -33,7 +35,7 @@ function run(render: Renderer) {
     let horizontalRadPerPx = (2*Math.PI) / (doc?.clientWidth ?? 1)
     let verticalRadPerPx = (2*Math.PI) / (doc?.clientHeight ?? 1)
 
-    render.edges(cube,
+    render.points(plane,
       {
         rotation: {
           x: Radians((event.clientX - (doc?.clientWidth ?? 1)/2) * horizontalRadPerPx),

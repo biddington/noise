@@ -9,7 +9,7 @@ const identity = [
   { x: 0, y: 0, z: 0, w: 1 }
 ] as Mat4
 
-function m(a:Mat4, b:Mat4): Mat4 {
+function mm(a:Mat4, b:Mat4): Mat4 {
   return [
     { x: a[0].x * b[0].x + a[1].x * b[0].y + a[2].x * b[0].z + a[3].x * b[0].w,
       y: a[0].y * b[0].x + a[1].y * b[0].y + a[2].y * b[0].z + a[3].y * b[0].w,
@@ -33,7 +33,7 @@ function m(a:Mat4, b:Mat4): Mat4 {
   ]
 }
 
-function mul(mat: Mat4, vec: Vec4): Vec4 {
+function mv(mat: Mat4, vec: Vec4): Vec4 {
 
   const [
     { x:ax, y:ay, z:az, w:aw },
@@ -61,9 +61,13 @@ export const iso = (vector: Vec4): Vec4 => {
     { x:  0, y:     0, z: 0, w: 1 },
   ];
 
-  return mul(matrix, vector);
+  return mv(matrix, vector);
 };
 
+/**
+ * Returns a matrix with `x`, `y`, `z` in the diagonal positions
+ * which can be viewed as scaling the identity matrix
+ */
 const scale =
   ({ x, y, z }: { x: number; y: number; z: number }) => {
     return [
@@ -74,6 +78,9 @@ const scale =
     ] as Mat4;
   };
 
+/**
+ * A matrix which rotates `ø` radians about the x-axis
+ */
 const rotateX = (ø: Radians):Mat4 => {
   return [
     { x: 1, y:       0, z:      0, w: 0 },
@@ -83,6 +90,9 @@ const rotateX = (ø: Radians):Mat4 => {
   ] as Mat4;
 };
 
+/**
+ * A matrix which rotates `ø` radians about the y-axis
+ */
 const rotateY = (ø: Radians):Mat4 => {
     return [
       { x:  cos(ø), y: 0, z: sin(ø), w: 0 },
@@ -93,6 +103,8 @@ const rotateY = (ø: Radians):Mat4 => {
   };
 
 /**
+ * A matrix which rotates ø radians about the x-axis
+ * 
  * @param angle {number} - The angle (given in radians) to rotate by
  * @param vector {vector} - The vector to rotate by `angle`
  */
@@ -107,8 +119,11 @@ export const rotateZ =
   };
 
 /**
- * @param angle {number} - The angle (given in radians) to rotate by
- * @param vector {vector} - The vector to rotate by `angle`
+ * Returns a function which takes `vector` and translates it `dz` along
+ * the z-axis
+ * 
+ * @param dz {number} - The amount in which to translate by
+ * @param vector {vector} - The vector to translate
  */
 export const translateZ =
   (dz: number) =>
@@ -120,9 +135,16 @@ export const translateZ =
       { x: 0, y: 0, z: dz, w: 1 },
     ];
 
-    return mul(rz, vector);
+    return mv(rz, vector);
   };
 
+/**
+ * Returns a matrix which when multiplied with a vector,
+ * translates it `tx` along x, `ty` along y and `tz` along z
+ * 
+ * @param { tx, ty, tz } { tx:number, ty:number, tz:number } - the amounts 
+ * to translate in each basis vector
+ */
 const translate =
   ({ tx, ty, tz }: { tx:number, ty: number, tz:number }):Mat4 => {
     return [
@@ -133,9 +155,11 @@ const translate =
     ];
   };
 
-////////////////////////////////////
-////// ChatGPT Generated Functions
-//////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////
+////////////////////  ChatGPT Generated Functions  ////////////////////
+//////////////////////////////////////////////////////////////////////
+
 function determinant(matrix:number[][]) {
 
   // Helper function to calculate the determinant of a 2x2 matrix
@@ -220,8 +244,8 @@ export {
   determinant,
   rotateX,
   rotateY,
-  m,
-  mul,
+  mm,
+  mv,
   identity,
   translate,
   inverse

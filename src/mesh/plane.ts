@@ -1,3 +1,11 @@
+
+function Idx(n: number): Idx {
+  if (!Number.isInteger(n))
+    throw Error(`Can't convert float, ${n}, to an index`);
+
+  return n as Idx;
+};
+
 let plane: Mesh = {
   vertices: [],
   faces: [],

@@ -1,5 +1,5 @@
-import { inverse, m, mul, rotateX, rotateY, identity, translate } from "./matrix";
-import { Radians } from "./units";
+import { inverse, mm, mv, rotateX, rotateY, identity, translate, rotateZ } from "./matrix";
+import { Degrees, Radians, toRadians } from "../units";
 
 type Dimensions = { width: number; height: number };
 
@@ -8,8 +8,8 @@ function comp<F extends (...args:any[]) => any,G extends (...args:any[]) => any>
 }
 
 //////////////////////////////////////////////////////////////////////
-////////////// Pipline functions
-//////////////////////////////////////////////////////////////////////
+/////////////////////  Pipline functions  ///////////////////////////
+////////////////////////////////////////////////////////////////////
 
 // let camera = (identity:Mat4, inputs:Ext) => {
 //   // How to?
@@ -125,18 +125,16 @@ const config = (ctx: CanvasRenderingContext2D): Renderer => {
     edges: (mesh: Mesh, inputs = defaults) => {
 
       const frame = () => {
-        // requestAnimationFrame(frame);
-
         // calculate the world matrix from inverse of the camera
-        let rm = m(
+        let rm = mm(
           rotateY(inputs?.rotation?.x ?? Radians(0)),
           rotateX(inputs?.rotation?.y ?? Radians(0)),
         )
         let tm = translate({ tx: 0, ty: 0, tz: 0 })
-        let world = m(rm, tm) // rm then tm
+        let world = mm(rm, tm) // rm then tm
         let camera = inverse(world)
 
-        let _v = mesh.vertices.map(v => mul(camera, v));
+        let _v = mesh.vertices.map(v => mv(camera, v));
 
         let rasterised = _v.map(pipeline);
 
@@ -154,22 +152,22 @@ const config = (ctx: CanvasRenderingContext2D): Renderer => {
       };
 
       frame()
-
-      // requestAnimationFrame(frame);
     },
 
     points: (mesh: Mesh, inputs = defaults) => {
 
       const frame = () => {
-        requestAnimationFrame(frame);
+        let rm = mm(
+          rotateZ(toRadians(Degrees(45)) ?? Radians(0)),
+          rotateX(toRadians(Degrees(45)) ?? Radians(0)),
+        )
+        let tm = translate({ tx: 0, ty: 0, tz: 0 })
+        let world = mm(rm, tm) // rm then tm
+        let camera = inverse(world)
 
-        // let modelRotation = local(fn(ms));
+        let _v = mesh.vertices.map(v => mv(camera, v));
 
-        // let rotatedVertices = mesh.vertices.map(modelRotation);
-
-        let zoom = mesh.vertices.map((v) => ({ ...v, z: v.z - 0 }));
-
-        let rasterised = zoom.map(pipeline);
+        let rasterised = _v.map(pipeline);
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
