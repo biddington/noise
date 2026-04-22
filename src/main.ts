@@ -3,11 +3,8 @@ import type { Renderer } from "./renderer/renderer";
 import { config } from "./renderer/renderer";
 import { Radians } from "./units";
 import { cube } from "./mesh/cube";
-import { plane } from "./mesh/plane";
-
 
 function setup(): Renderer {
-
   const canvas = document.querySelector<HTMLCanvasElement>("#canvas")!;
 
   canvas.width = canvas.height = window.devicePixelRatio * 500;
@@ -20,29 +17,30 @@ function setup(): Renderer {
 }
 
 /**
-* Essentially an event-driven renderer where each event produced from the DOM handler queues up render
-* at this stage different event sources will clobber each other and produce broken renders
-*/
+ * Essentially an event-driven renderer where each event produced from the DOM handler queues up render
+ * at this stage different event sources will clobber each other and produce broken renders
+ */
 function run(render: Renderer) {
-  const doc = document.querySelector<Element>('body');
+  const doc = document.querySelector<Element>("body");
 
-  window.addEventListener("resize", () => {
+  window.addEventListener("resize", () => {});
 
-  })
-
-  window.addEventListener("mousemove", (event:MouseEvent) => {
+  window.addEventListener("mousemove", (event: MouseEvent) => {
     // I want the window width = 2Pi
-    let horizontalRadPerPx = (2*Math.PI) / (doc?.clientWidth ?? 1)
-    let verticalRadPerPx = (2*Math.PI) / (doc?.clientHeight ?? 1)
+    let horizontalRadPerPx = (2 * Math.PI) / (doc?.clientWidth ?? 1);
+    let verticalRadPerPx = (2 * Math.PI) / (doc?.clientHeight ?? 1);
 
-    render.points(plane,
-      {
-        rotation: {
-          x: Radians((event.clientX - (doc?.clientWidth ?? 1)/2) * horizontalRadPerPx),
-          y: Radians((event.clientY - (doc?.clientHeight ?? 1)/2)* verticalRadPerPx),
-        }
-    })
-  })
+    render.edges(cube, {
+      rotation: {
+        x: Radians(
+          (event.clientX - (doc?.clientWidth ?? 1) / 2) * horizontalRadPerPx,
+        ),
+        y: Radians(
+          (event.clientY - (doc?.clientHeight ?? 1) / 2) * verticalRadPerPx,
+        ),
+      },
+    });
+  });
 }
 
 run(setup());
